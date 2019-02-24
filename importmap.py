@@ -50,73 +50,111 @@ def main():
 	Starts the moving algorithm for the node
 	'''
 
-	#move_node()
-	
 	#set initial position of the node
         xPos, yPos = 1,1;
 	xNodePos, yNodePos = 38,28
 	os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
 	time.sleep(0.5)
 
-        #maze traversal algorithm
-        while True:
-                if MapMatrix[xPos][yPos+1] == " " and MapMatrix[xPos][yPos+2] == " ": #go down
-                        yPos=yPos+2
-			yNodePos=yNodePos+47
-                        os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.5)
-			print "In go down...current pos: (" + str(xPos) + "," + str(yPos) + ")",
-			print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
-                
-		elif MapMatrix[xPos+1][yPos] == " " and MapMatrix[xPos+2][yPos] == " ": #go right
-                        xPos=xPos+2
-			xNodePos=xNodePos+73
-			os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.5)
-			print "In go right...current pos: (" + str(xPos) + "," + str(yPos) + ")",
-			print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
-                
-		elif MapMatrix[xPos-1][yPos] == " " and MapMatrix[xPos-2][yPos] == " ": #go left
-                        xPos=xPos-2
-			xNodePos=xNodePos-73
-			os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.5)
-			print "In go left...current pos: (" + str(xPos) + "," + str(yPos) + ")",
-			print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
-                
-		elif MapMatrix[xPos][yPos-1] == " " and MapMatrix[xPos][yPos-2] == " ": #go up
-                        yPos=yPos-2
-			yNodePos=yNodePos-47
-			os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.5)
-			print "In go down...current pos: (" + str(xPos) + "," + str(yPos) + ")",
-			print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
+	treeNodeVal = 0
+	xParentNode, yParentNode = 38,28;
+	xParentPos, yParentPos = 1,1;
 
-'''
-def move_node():
+	xPNStack = []
+	yPNStack = []
+	xPPStack = []
+	yPPStack = []
 
-	#set initial position of the node
-	xPos, yPos = 1,1;
-
-	#maze traversal algorithm
 	while True:
-		if MapMatrix[xPos][yPos+1] == " ": #go down
-			yPos=yPos+47
-			os.system("coresendmsg node number=1 xpos="+str(xPos)+" ypos="+str(yPos))
-			time.sleep(0.5)
-		elif MapMatrix[xPos+1][yPos] == " ": #go right
-			xPos=xPos+73
-			os.system("coresendmsg node number=1 xpos="+str(xPos)+" ypos="+str(yPos))
-			time.sleep(0.5)
-		elif MapMatrix[xPos-1][yPos] == " ": #go left
-			xPo=xPos-73
-			os.system("coresendmsg node number=1 xpos="+str(xPos)+" ypos="+str(yPos))
-			time.sleep(0.5)
-		elif MapMatrix[xPos][yPos+1] == " ": #go up
-			yPos=yPos-47
-			os.system("coresendmsg node number=1 xpos="+str(xPos)+" ypos="+str(yPos))
-			time.sleep(0.5)
-'''
+
+		treeNodeVal=0
+
+		#sets the current matrix position to number of child branches
+		if MapMatrix[xPos][yPos+1] == " " and MapMatrix[xPos][yPos+2] == " ": #go down
+			treeNodeVal+=1
+		if MapMatrix[xPos+1][yPos] == " " and MapMatrix[xPos+2][yPos] == " ": #go right
+			treeNodeVal+=1
+		if MapMatrix[xPos-1][yPos] == " " and MapMatrix[xPos-2][yPos] == " ": #go left
+			treeNodeVal+=1
+		if MapMatrix[xPos][yPos-1] == " " and MapMatrix[xPos][yPos-2] == " ": #go up
+			treeNodeVal+=1
+		if treeNodeVal==0:
+			print "Back to parent"
+
+		MapMatrix[xPos][yPos] = treeNodeVal
+		
+		#navigating the matrix		
+		if MapMatrix[xPos][yPos+1] == " " and MapMatrix[xPos][yPos+2] == " ": #go down
+                        
+			#setting parent node values
+			xPNStack.append(xNodePos)
+        		yPNStack.append(yNodePos)
+        		xPPStack.append(xPos)
+        		yPPStack.append(yPos)			
+
+			#updating current node values
+			yPos=yPos+2
+                        yNodePos=yNodePos+47
+                        os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
+                        time.sleep(0.2)
+                        print "In go down...current pos: (" + str(xPos) + "," + str(yPos) + ")",
+                        print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
+
+                elif MapMatrix[xPos+1][yPos] == " " and MapMatrix[xPos+2][yPos] == " ": #go right
+                        
+			#setting parent node values
+			xPNStack.append(xNodePos)
+                        yPNStack.append(yNodePos)
+                        xPPStack.append(xPos)
+                        yPPStack.append(yPos)
+
+                        #updating current node values
+			xPos=xPos+2
+                        xNodePos=xNodePos+73
+                        os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
+                        time.sleep(0.2)
+                        print "In go right...current pos: (" + str(xPos) + "," + str(yPos) + ")",
+                        print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
+
+                elif MapMatrix[xPos-1][yPos] == " " and MapMatrix[xPos-2][yPos] == " ": #go left
+                        
+			#setting parent node values
+			xPNStack.append(xNodePos)
+                        yPNStack.append(yNodePos)
+                        xPPStack.append(xPos)
+                        yPPStack.append(yPos)
+
+                        #updating current node values
+			xPos=xPos-2
+                        xNodePos=xNodePos-73
+                        os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
+                        time.sleep(0.2)
+                        print "In go left...current pos: (" + str(xPos) + "," + str(yPos) + ")",
+                        print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
+
+		elif MapMatrix[xPos][yPos-1] == " " and MapMatrix[xPos][yPos-2] == " ": #go up
+                        
+			#setting parent node values
+			xPNStack.append(xNodePos)
+                        yPNStack.append(yNodePos)
+                        xPPStack.append(xPos)
+                        yPPStack.append(yPos)
+
+                        #updating current node values
+			yPos=yPos-2
+                        yNodePos=yNodePos-47
+                        os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
+                        time.sleep(0.2)
+                        print "In go down...current pos: (" + str(xPos) + "," + str(yPos) + ")",
+                        print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
+		
+		if treeNodeVal==0:
+			xNodePos = xPNStack.pop()
+                        yNodePos = yPNStack.pop()
+			os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
+			time.sleep(0.2)
+                        xPos = xPPStack.pop()
+                        yPos = yPPStack.pop()
 
 if __name__ == "__main__":
 	main()

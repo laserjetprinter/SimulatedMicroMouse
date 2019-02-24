@@ -96,7 +96,7 @@ def main():
 			yPos=yPos+2
                         yNodePos=yNodePos+47
                         os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.2)
+                        time.sleep(0.1)
                         print "In go down...current pos: (" + str(xPos) + "," + str(yPos) + ")",
                         print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
 
@@ -112,7 +112,7 @@ def main():
 			xPos=xPos+2
                         xNodePos=xNodePos+73
                         os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.2)
+                        time.sleep(0.1)
                         print "In go right...current pos: (" + str(xPos) + "," + str(yPos) + ")",
                         print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
 
@@ -128,7 +128,7 @@ def main():
 			xPos=xPos-2
                         xNodePos=xNodePos-73
                         os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.2)
+                        time.sleep(0.1)
                         print "In go left...current pos: (" + str(xPos) + "," + str(yPos) + ")",
                         print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
 
@@ -144,18 +144,34 @@ def main():
 			yPos=yPos-2
                         yNodePos=yNodePos-47
                         os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-                        time.sleep(0.2)
+                        time.sleep(0.1)
                         print "In go down...current pos: (" + str(xPos) + "," + str(yPos) + ")",
                         print "MapMatrix character at (" + str(xPos) + "," + str(yPos) + ")" + MapMatrix[xPos][yPos]
 		
+		#if the stack is empty
+		if len(xPNStack) == 0:
+			break
+
 		if treeNodeVal==0:
 			xNodePos = xPNStack.pop()
                         yNodePos = yPNStack.pop()
 			os.system("coresendmsg node number=1 xpos="+str(xNodePos)+" ypos="+str(yNodePos))
-			time.sleep(0.2)
+			time.sleep(0.1)
                         xPos = xPPStack.pop()
                         yPos = yPPStack.pop()
-
+	
+	#print out the traveresed matrix
+	xVal, yVal = 0,0;
+	while True:
+		print MapMatrix[xVal][yVal],	
+		if xVal==33 and yVal==32:
+			break
+		if xVal==33:
+			xVal=0
+			yVal+=1
+		else:
+			xVal+=1
+		
 if __name__ == "__main__":
 	main()
 			
